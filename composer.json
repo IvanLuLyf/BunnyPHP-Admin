@@ -1,0 +1,20 @@
+{
+  "name": "ivanlulyf/bunnyphp-admin",
+  "description": "BunnyPHP Admin",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ivan Lu",
+      "email": "me@ivanlu.cn"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "BunnyPHP\\Admin\\": "admin/"
+    }
+  },
+  "require": {
+    "ivanlulyf/bunnyphp": "^2.2"
+  }
+}
