@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><?=$title?>添加-BunnyPHP Admin</title>
+    <?php include(__DIR__.'/header.html') ;?>
+</head>
+<body>
+<?php include(__DIR__.'/nav.html') ;?>
+<div class="container-fluid">
+    <div class="row">
+        <?php include(__DIR__.'/sidebar.html') ;?>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                <h1 class="h2"><?=$title?>添加</h1>
+            </div>
+            <form action="/admin/<?=$mod?>/add" method="post" enctype="multipart/form-data">
+                <?php foreach ($columns as $c):?>
+                <div class="form-group">
+                    <label for="<?=$c?>"><?=$conf[$c]['label']?></label>
+                    <input type="text" class="form-control" id="<?=$c?>" name="<?=$c?>"
+                           placeholder="<?=$conf[$c]['label']?>">
+                </div>
+                <?php endforeach?>
+                <button type="submit" class="btn btn-success">添加</button>
+            </form>
+        </main>
+    </div>
+</div>
+</body>
+</html>

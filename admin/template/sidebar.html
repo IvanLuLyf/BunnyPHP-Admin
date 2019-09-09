@@ -1,0 +1,14 @@
+<nav class="col-md-2 d-none d-md-block bg-light sidebar">
+    <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link <?=''==$mod?'active':''?>" href="/admin/">首页</a>
+            </li>
+            <?php foreach($navs as $n):?>
+            <li class="nav-item">
+                <a class="nav-link <?=$n['model']==$mod?'active':''?>" href="/admin/<?=$n['model']?>/manage"><?=$n['name']?></a>
+            </li>
+            <?php endforeach;?>
+        </ul>
+    </div>
+</nav>

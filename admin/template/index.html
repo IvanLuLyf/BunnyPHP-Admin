@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BunnyPHP Admin</title>
+    <?php include(__DIR__.'/header.html') ;?>
+</head>
+<body>
+<?php include(__DIR__.'/nav.html') ;?>
+<div class="container-fluid">
+    <div class="row">
+        <?php include(__DIR__.'/sidebar.html') ;?>
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                <h1 class="h2">BunnyPHP Admin</h1>
+            </div>
+            <div class="jumbotron">
+                <p>BunnyPHP Ver: <?=\BunnyPHP\BunnyPHP::BUNNY_VERSION?></p>
+                <p>Server Name: <?=$_SERVER['SERVER_NAME']?></p>
+                <p>Server Software: <?=$_SERVER['SERVER_SOFTWARE']?></p>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+</html>
