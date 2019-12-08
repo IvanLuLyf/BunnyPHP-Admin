@@ -16,6 +16,7 @@
             <div class="card mt-2">
                 <h5 class="card-header">BunnyPHP信息</h5>
                 <div class="card-body">
+                    <p>BunnyPHP Admin版本: <?=$admin_version?> <a href="https://github.com/IvanLuLyf/BunnyPHP-Admin"><img alt="" src="https://img.shields.io/packagist/v/ivanlulyf/bunnyphp-admin?color=blue&label=lastest&style=flat-square"></a></p>
                     <p>BunnyPHP版本: <?=\BunnyPHP\BunnyPHP::BUNNY_VERSION?></p>
                 </div>
             </div>
@@ -23,7 +24,7 @@
                 <h5 class="card-header">服务器信息</h5>
                 <div class="card-body">
                     <p>引擎: <?=$_SERVER['SERVER_SOFTWARE']?></p>
-                    <p>IP地址: <?=$_SERVER['SERVER_ADDR']?></p>
+                    <p>IP地址: <?=isset($_SERVER['SERVER_ADDR'])?$_SERVER['SERVER_ADDR']:''?></p>
                     <p>域名: <?=$_SERVER['SERVER_NAME']?></p>
                     <p>端口: <?=$_SERVER['SERVER_PORT']?></p>
                     <p>版本: <?=php_uname('s').php_uname('r')?></p>

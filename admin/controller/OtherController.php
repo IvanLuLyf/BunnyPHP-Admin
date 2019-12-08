@@ -1,7 +1,7 @@
 <?php
 
 
-namespace BunnyPHP\Admin\Controller;
+namespace Bunny\Admin\Controller;
 
 
 use BunnyPHP\BunnyPHP;
@@ -9,11 +9,12 @@ use BunnyPHP\Config;
 use BunnyPHP\Controller;
 use BunnyPHP\Model;
 
-define('ADMIN_VIEW_DIR', '@' . __DIR__ . '/../template/');
+define('ADMIN_VIEW_DIR', __DIR__ . '/../template/');
 
 class OtherController extends Controller
 {
     /**
+     * @filter bunny.admin.auth
      * @param int $id path(0)
      */
     public function ac_edit_get($id)
@@ -41,11 +42,11 @@ class OtherController extends Controller
         $this->assign('title', $modelConf['title']);
         $this->assign('mod', $mod);
         $this->assign('item', $item);
-        $this->render(ADMIN_VIEW_DIR . 'edit.html');
+        $this->render(['edit.html', ADMIN_VIEW_DIR]);
     }
 
     /**
-     * @filter auth
+     * @filter bunny.admin.auth
      * @param int $id path(0)
      */
     public function ac_edit_post($id = 0)
@@ -73,6 +74,9 @@ class OtherController extends Controller
         $this->redirect('/admin/' . $mod . '/edit/' . $id);
     }
 
+    /**
+     * @filter bunny.admin.auth
+     */
     public function ac_add_get()
     {
         $mod = strtolower($this->getController());
@@ -90,9 +94,12 @@ class OtherController extends Controller
         $this->assign('conf', $columnConf);
         $this->assign('title', $modelConf['title']);
         $this->assign('mod', $mod);
-        $this->render(ADMIN_VIEW_DIR . 'add.html');
+        $this->render(['add.html', ADMIN_VIEW_DIR]);
     }
 
+    /**
+     * @filter bunny.admin.auth
+     */
     public function ac_add_post()
     {
         $mod = strtolower($this->getController());
@@ -121,6 +128,11 @@ class OtherController extends Controller
         $this->redirect('/admin/' . $mod . '/manage');
     }
 
+    /**
+     * @filter bunny.admin.auth
+     * @param int $page
+     * @param int $limit
+     */
     public function ac_manage($page = 1, $limit = 10)
     {
         $mod = strtolower($this->getController());
@@ -144,6 +156,53 @@ class OtherController extends Controller
         $this->assign('mod', $mod);
         $this->assign('items', $items);
         $this->assign('page', $page);
-        $this->render(ADMIN_VIEW_DIR . 'manage.html');
+        $this->render(['manage.html', ADMIN_VIEW_DIR]);
+    }
+
+    /**
+     * @filter bunny.admin.auth
+     * @param array $path
+     * @param int $page
+     * @param int $limit
+     */
+    public function other(array $path = [], $page = 1, $limit = 10)
+    {
+        $mod = strtolower($this->getController());
+        $ac = $this->getAction();
+        if (is_numeric($ac)) {
+            $modelClass = BunnyPHP::getClassName($mod, 'model');
+            $config = Config::load('bunny_php_admin');
+            $navs = $config->get('navs', []);
+            $modelConf = $config->get('models')[$mod];
+            $primaryKey = isset($modelConf['pk']) ? $modelConf['pk'] : 'id';
+            $relations = isset($modelConf['relation']) ? $modelConf['relation'] : [];
+            $modAssoc = strtolower($path[0]);
+            if (isset($relations[$modAssoc])) {
+                $relation = $relations[$modAssoc];
+
+                $columnConf = $modelConf['column'];
+                $column = array_keys($columnConf);
+
+                /**
+                 * @var $model Model
+                 */
+                $model = new $modelClass();
+
+                $item = $model->where($primaryKey . ' =:pk ', ['pk' => $ac])->fetch($column);
+
+                $assocKey = $item[$relation['key']];
+
+                $modelAssocConf = $config->get('models')[$modAssoc];
+                $assocModelClass = BunnyPHP::getClassName($modAssoc, 'model');
+                /**
+                 * @var $assocModel Model
+                 */
+                $assocModel = new $assocModelClass();
+                $assocColumnConf = $modelAssocConf['column'];
+                $assocColumn = array_keys($assocColumnConf);
+                $items = $assocModel->where($relation['assoc'] . ' =:ak ', ['ak' => $assocKey])->limit($limit, ($page - 1) * $limit)->fetchAll($assocColumn);
+                print_r($items);
+            }
+        }
     }
 }
