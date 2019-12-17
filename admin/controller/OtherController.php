@@ -19,30 +19,34 @@ class OtherController extends Controller
      */
     public function ac_edit_get($id)
     {
-        $mod = strtolower($this->getController());
+        $mod = lcfirst($this->getController());
         $modelClass = BunnyPHP::getClassName($mod, 'model');
 
         $config = Config::load('bunny_php_admin');
-        $navs = $config->get('navs', []);
         $modelConf = $config->get('models')[$mod];
         $primaryKey = isset($modelConf['pk']) ? $modelConf['pk'] : 'id';
-        $columnConf = $modelConf['column'];
+        $columnConf = isset($modelConf['edit']) ? $modelConf['edit'] : $modelConf['column'];
         $column = array_keys($columnConf);
+
+        $navs = $config->get('navs', []);
+        $appPath = $config->get('path', 'admin');
 
         /**
          * @var $model Model
          */
         $model = new $modelClass();
-
         $item = $model->where($primaryKey . ' =:pk ', ['pk' => $id])->fetch($column);
-        $this->assign('primaryKey', $primaryKey);
-        $this->assign('columns', $column);
-        $this->assign('navs', $navs);
-        $this->assign('conf', $columnConf);
-        $this->assign('title', $modelConf['title']);
-        $this->assign('mod', $mod);
-        $this->assign('item', $item);
-        $this->render(['edit.html', ADMIN_VIEW_DIR]);
+
+        $this->assignAll([
+            'mod' => $mod,
+            'title' => $modelConf['title'],
+            'navs' => $navs,
+            'primaryKey' => $primaryKey,
+            'columns' => $column,
+            'conf' => $columnConf,
+            'appPath' => $appPath,
+            'item' => $item,
+        ])->render(['edit.html', ADMIN_VIEW_DIR]);
     }
 
     /**
@@ -51,14 +55,16 @@ class OtherController extends Controller
      */
     public function ac_edit_post($id = 0)
     {
-        $mod = strtolower($this->getController());
+        $mod = lcfirst($this->getController());
         $modelClass = BunnyPHP::getClassName($mod, 'model');
 
         $config = Config::load('bunny_php_admin');
         $modelConf = $config->get('models')[$mod];
         $primaryKey = isset($modelConf['pk']) ? $modelConf['pk'] : 'id';
-        $columnConf = $modelConf['column'];
+        $columnConf = isset($modelConf['edit']) ? $modelConf['edit'] : $modelConf['column'];
         $column = array_keys($columnConf);
+
+        $appPath = $config->get('path', 'admin');
 
         /**
          * @var $model Model
@@ -71,7 +77,22 @@ class OtherController extends Controller
             }
         }
         $ret = $model->where($primaryKey . ' =:pk ', ['pk' => $id])->update($updateData);
-        $this->redirect('/admin/' . $mod . '/edit/' . $id);
+
+        if ($ret > 0) {
+            $this->redirect("/{$appPath}/{$mod}/edit/{$id}");
+        } else {
+            $navs = $config->get('navs', []);
+            $this->assignAll([
+                'mod' => $mod,
+                'title' => $modelConf['title'],
+                'navs' => $navs,
+                'primaryKey' => $primaryKey,
+                'columns' => $column,
+                'conf' => $columnConf,
+                'appPath' => $appPath,
+                'tp_error_msg' => '保存失败',
+            ])->render(['error.html', ADMIN_VIEW_DIR]);
+        }
     }
 
     /**
@@ -79,22 +100,26 @@ class OtherController extends Controller
      */
     public function ac_add_get()
     {
-        $mod = strtolower($this->getController());
+        $mod = lcfirst($this->getController());
 
         $config = Config::load('bunny_php_admin');
-        $navs = $config->get('navs', []);
         $modelConf = $config->get('models')[$mod];
         $primaryKey = isset($modelConf['pk']) ? $modelConf['pk'] : 'id';
-        $columnConf = $modelConf['column'];
+        $columnConf = isset($modelConf['add']) ? $modelConf['add'] : $modelConf['column'];
         $column = array_keys($columnConf);
 
-        $this->assign('primaryKey', $primaryKey);
-        $this->assign('columns', $column);
-        $this->assign('navs', $navs);
-        $this->assign('conf', $columnConf);
-        $this->assign('title', $modelConf['title']);
-        $this->assign('mod', $mod);
-        $this->render(['add.html', ADMIN_VIEW_DIR]);
+        $navs = $config->get('navs', []);
+        $appPath = $config->get('path', 'admin');
+
+        $this->assignAll([
+            'mod' => $mod,
+            'title' => $modelConf['title'],
+            'navs' => $navs,
+            'primaryKey' => $primaryKey,
+            'columns' => $column,
+            'conf' => $columnConf,
+            'appPath' => $appPath,
+        ])->render(['add.html', ADMIN_VIEW_DIR]);
     }
 
     /**
@@ -102,14 +127,16 @@ class OtherController extends Controller
      */
     public function ac_add_post()
     {
-        $mod = strtolower($this->getController());
+        $mod = lcfirst($this->getController());
         $modelClass = BunnyPHP::getClassName($mod, 'model');
 
         $config = Config::load('bunny_php_admin');
         $modelConf = $config->get('models')[$mod];
         $primaryKey = isset($modelConf['pk']) ? $modelConf['pk'] : 'id';
-        $columnConf = $modelConf['column'];
+        $columnConf = isset($modelConf['add']) ? $modelConf['add'] : $modelConf['column'];
         $column = array_keys($columnConf);
+
+        $appPath = $config->get('path', 'admin');
 
         /**
          * @var $model Model
@@ -125,7 +152,21 @@ class OtherController extends Controller
             }
         }
         $ret = $model->add($newData);
-        $this->redirect('/admin/' . $mod . '/manage');
+        if ($ret > 0) {
+            $this->redirect("/{$appPath}/{$mod}/manage");
+        } else {
+            $navs = $config->get('navs', []);
+            $this->assignAll([
+                'mod' => $mod,
+                'title' => $modelConf['title'],
+                'navs' => $navs,
+                'primaryKey' => $primaryKey,
+                'columns' => $column,
+                'conf' => $columnConf,
+                'appPath' => $appPath,
+                'tp_error_msg' => '添加失败',
+            ])->render(['error.html', ADMIN_VIEW_DIR]);
+        }
     }
 
     /**
@@ -135,28 +176,34 @@ class OtherController extends Controller
      */
     public function ac_manage($page = 1, $limit = 10)
     {
-        $mod = strtolower($this->getController());
+        $mod = lcfirst($this->getController());
         $modelClass = BunnyPHP::getClassName($mod, 'model');
+
         $config = Config::load('bunny_php_admin');
-        $navs = $config->get('navs', []);
         $modelConf = $config->get('models')[$mod];
         $primaryKey = isset($modelConf['pk']) ? $modelConf['pk'] : 'id';
-        $columnConf = $modelConf['column'];
+        $columnConf = isset($modelConf['view']) ? $modelConf['view'] : $modelConf['column'];
         $column = array_keys($columnConf);
+
+        $navs = $config->get('navs', []);
+        $appPath = $config->get('path', 'admin');
+
         /**
          * @var $model Model
          */
         $model = new $modelClass();
         $items = $model->limit($limit, ($page - 1) * $limit)->fetchAll($column);
-        $this->assign('primaryKey', $primaryKey);
-        $this->assign('columns', $column);
-        $this->assign('navs', $navs);
-        $this->assign('conf', $columnConf);
-        $this->assign('title', $modelConf['title']);
-        $this->assign('mod', $mod);
-        $this->assign('items', $items);
-        $this->assign('page', $page);
-        $this->render(['manage.html', ADMIN_VIEW_DIR]);
+        $this->assignAll([
+            'mod' => $mod,
+            'title' => $modelConf['title'],
+            'navs' => $navs,
+            'primaryKey' => $primaryKey,
+            'columns' => $column,
+            'conf' => $columnConf,
+            'appPath' => $appPath,
+            'items' => $items,
+            'page' => $page,
+        ])->render(['manage.html', ADMIN_VIEW_DIR]);
     }
 
     /**

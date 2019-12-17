@@ -16,9 +16,12 @@ class IndexController extends Controller
     {
         $config = Config::load('bunny_php_admin');
         $navs = $config->get('navs', []);
-        $this->assign('navs', $navs);
-        $this->assign('mod', '');
-        $this->assign('admin_version', '1.0.0');
-        $this->render(['index.html', ADMIN_VIEW_DIR]);
+        $appPath = $config->get('path', 'admin');
+        $this->assignAll([
+            'mod' => '',
+            'navs' => $navs,
+            'appPath' => $appPath,
+            'admin_version' => '1.0.2',
+        ])->render(['index.html', ADMIN_VIEW_DIR]);
     }
 }

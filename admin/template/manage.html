@@ -21,8 +21,8 @@
                 <h1 class="h2"><?=$title?>管理</h1>
                 <div class="btn-toolbar mb-2 mb-md-0">
                     <div class="btn-group mr-2">
-                        <a class="btn btn-sm btn-outline-info" href="/admin/<?=$mod?>/add">添加</a>
-                        <a class="btn btn-sm btn-outline-danger" href="/admin/<?=$mod?>/delete">删除</a>
+                        <a class="btn btn-sm btn-outline-info" href="/<?=$appPath?>/<?=$mod?>/add">添加</a>
+                        <a class="btn btn-sm btn-outline-danger" href="/<?=$appPath?>/<?=$mod?>/delete">删除</a>
                     </div>
                 </div>
             </div>
@@ -50,19 +50,19 @@
                         <?php endforeach;?>
                         <td>
                             <a role="button" class="btn btn-sm btn-info"
-                               href="/admin/<?=$mod?>/edit/<?=$item[$primaryKey]?>">编辑</a>
+                               href="/<?=$appPath?>/<?=$mod?>/edit/<?=$item[$primaryKey]?>">编辑</a>
                             <a role="button" class="btn btn-sm btn-danger"
-                               href="/admin/<?=$mod?>/delete/<?=$item[$primaryKey]?>">删除</a>
+                               href="/<?=$appPath?>/<?=$mod?>/delete/<?=$item[$primaryKey]?>">删除</a>
                         </td>
                     </tr>
                     <?php endforeach;?>
                     </tbody>
                 </table>
                 <?php if($page>1):?>
-                <a role="button" class="btn btn-sm btn-info" href="/admin/<?=$mod?>/manage?page=<?=$page-1?>">上一页</a>
+                <a role="button" class="btn btn-sm btn-info" href="/<?=$appPath?>/<?=$mod?>/manage?page=<?=$page-1?>">上一页</a>
                 <?php endif;?>
                 当前页:<?=$page?>
-                <a role="button" class="btn btn-sm btn-info" href="/admin/<?=$mod?>/manage?page=<?=$page+1?>">下一页</a>
+                <a role="button" class="btn btn-sm btn-info" href="/<?=$appPath?>/<?=$mod?>/manage?page=<?=$page+1?>">下一页</a>
             </div>
         </main>
     </div>

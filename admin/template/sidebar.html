@@ -7,7 +7,7 @@
             <?php foreach($navs as $n):?>
             <li class="nav-item">
                 <a class="nav-link <?=$n['model']==$mod?'active':''?>"
-                   href="/admin/<?=$n['model']?>/manage"><?=$n['name']?></a>
+                   href="/<?=$appPath?>/<?=$n['model']?>/manage"><?=$n['name']?></a>
             </li>
             <?php endforeach;?>
         </ul>
