@@ -15,8 +15,12 @@ class AuthFilter extends Filter
          * @var $filter Filter
          */
         $filterClass = Config::load('bunny_php_admin')->get('filter');
-        $filterName = BunnyPHP::getClassName($filterClass, 'filter');
-        $filter = new $filterName($this->_mode);
-        return $filter->doFilter($fa);
+        if ($filterClass) {
+            $filterName = BunnyPHP::getClassName($filterClass, 'filter');
+            $filter = new $filterName($this->_mode);
+            return $filter->doFilter($fa);
+        } else {
+            return self::NEXT;
+        }
     }
 }
