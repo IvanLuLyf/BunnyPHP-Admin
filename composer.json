@@ -11,10 +11,13 @@
   ],
   "autoload": {
     "psr-4": {
-      "Bunny\\Admin\\": "admin/"
+      "Bunny\\Admin\\Controller\\": "admin/controller/",
+      "Bunny\\Admin\\Filter\\": "admin/filter/"
     }
   },
   "require": {
     "ivanlulyf/bunnyphp": "^2.3"
+  },
+  "extra": {
   }
 }
