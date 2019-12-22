@@ -17,8 +17,20 @@
                 <?php foreach ($columns as $c):?>
                 <div class="form-group">
                     <label for="<?=$c?>"><?=$conf[$c]['label']?></label>
+                    <?php if($conf[$c]['type']=='textarea'):?>
+                    <textarea id="<?=$c?>" class="form-control" name="<?=$c?>" rows="5"
+                              placeholder="<?=$conf[$c]['label']?>"></textarea>
+                    <?php elseif($conf[$c]['type']=='enum'):?>
+                    <select id="<?=$c?>" class="form-control" name="<?=$c?>">
+                        <?php foreach ($conf[$c]['enum'] as $emV => $emT):?>
+                        <option value="<?=$emV?>"><?=$emT?></option>
+                        <?php endforeach?>
+                    </select>
+                    <?php elseif($conf[$c]['type']=='timestamp'):?>
+                    <?php else :?>
                     <input type="text" class="form-control" id="<?=$c?>" name="<?=$c?>"
                            placeholder="<?=$conf[$c]['label']?>">
+                    <?php endif; ?>
                 </div>
                 <?php endforeach?>
                 <button type="submit" class="btn btn-success">添加</button>

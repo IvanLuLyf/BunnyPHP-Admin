@@ -13,13 +13,27 @@
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                 <h1 class="h2"><?=$title?>编辑</h1>
             </div>
-            <form action="/<?=$appPath?>/<?=$mod?>/edit/<?=$item[$primaryKey]?>" method="post" enctype="multipart/form-data">
+            <form action="/<?=$appPath?>/<?=$mod?>/edit/<?=$item[$primaryKey]?>" method="post"
+                  enctype="multipart/form-data">
                 <?php foreach ($columns as $c):?>
                 <div class="form-group">
                     <label for="<?=$c?>"><?=$conf[$c]['label']?></label>
+                    <?php if($conf[$c]['type']=='textarea'):?>
+                    <textarea id="<?=$c?>" class="form-control" name="<?=$c?>" rows="5"
+                              placeholder="<?=$conf[$c]['label']?>"><?=$item[$c]?></textarea>
+                    <?php elseif($conf[$c]['type']=='enum'):?>
+                    <select id="<?=$c?>" class="form-control" name="<?=$c?>">
+                        <?php foreach ($conf[$c]['enum'] as $emV => $emT):?>
+                        <option value="<?=$emV?>"
+                        <?=($emV==$item[$c])?'selected':''?>><?=$emT?></option>
+                        <?php endforeach?>
+                    </select>
+                    <?php elseif($conf[$c]['type']=='timestamp'):?>
+                    <?php else :?>
                     <input type="text" class="form-control" id="<?=$c?>" name="<?=$c?>"
                            placeholder="<?=$conf[$c]['label']?>"
                            value="<?=$item[$c]?>">
+                    <?php endif; ?>
                 </div>
                 <?php endforeach?>
                 <button type="submit" class="btn btn-success">保存</button>

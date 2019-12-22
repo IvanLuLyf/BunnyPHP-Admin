@@ -44,6 +44,8 @@
                         <?php foreach ($columns as $c):?>
                         <?php if($conf[$c]['type']=='enum'):?>
                         <td><span class="badge badge-dark"><?=$conf[$c]['enum'][$item[$c]]?></span></td>
+                        <?php elseif($conf[$c]['type']=='timestamp'):?>
+                        <td><?=date('Y-m-d H:i:s',$item[$c])?></td>
                         <?php else :?>
                         <td><?=$item[$c]?></td>
                         <?php endif; ?>
